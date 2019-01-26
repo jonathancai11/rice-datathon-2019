@@ -1,18 +1,19 @@
+import json
+
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
-import json
 
 # load our API credentials
 import sys
 sys.path.append(".")
 import config
 
-#consumer key, consumer secret, access token, access secret.
-ckey = config.consumer_key
-csecret = config.consumer_secret
-atoken = config.access_key
-asecret = config.access_secret
+consumer_key = config.consumer_key
+consumer_secret = config.consumer_secret
+access_token = config.access_key
+access_token_secret = config.access_secret
+
 
 class listener(StreamListener):
 
@@ -33,8 +34,8 @@ class listener(StreamListener):
     def on_error(self, status):
         print(status)
 
-auth = OAuthHandler(ckey, csecret)
-auth.set_access_token(atoken, asecret)
+auth = OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
 
 twitterStream = Stream(auth, listener())
 twitterStream.filter(track=["government shutdown"])
