@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 #-----------------------------------------------------------------------
 # twitter-stream-format:
 #  - ultra-real-time stream of twitter's public timeline.
@@ -9,43 +7,39 @@
 from twitter import *
 import re
 
-search_term = "bieber"
+search_term = "government shutdown"
 
-#-----------------------------------------------------------------------
 # import a load of external features, for text display and date handling
-# you will need the termcolor module:
-#
-# pip install termcolor
-#-----------------------------------------------------------------------
 from time import strftime
 from textwrap import fill
 from termcolor import colored
 from email.utils import parsedate
 
-#-----------------------------------------------------------------------
 # load our API credentials
-#-----------------------------------------------------------------------
 import sys
 sys.path.append(".")
 import config
 
-#-----------------------------------------------------------------------
 # create twitter streaming API object
-#-----------------------------------------------------------------------
 auth = OAuth(config.access_key,
              config.access_secret,
              config.consumer_key,
              config.consumer_secret)
 stream = TwitterStream(auth = auth, secure = True)
 
-#-----------------------------------------------------------------------
 # iterate over tweets matching this filter text
-#-----------------------------------------------------------------------
 tweet_iter = stream.statuses.filter(track = search_term)
 
 pattern = re.compile("%s" % search_term, re.IGNORECASE)
 
 for tweet in tweet_iter:
+
+    # check for geo and print if so
+    if tweet["place"]:
+        print("FOUND GEOTAG\n")
+        print(tweet["place"])
+        print("\n")
+
     # turn the date string into a date object that python can handle
     timestamp = parsedate(tweet["created_at"])
 
