@@ -24,7 +24,7 @@ for emotion in emotions:
 tweets['date'] = pd.to_datetime(tweets['date'])
 tweets['minute'] = tweets['date'].apply(lambda date: date.minute)
 
-print(tweets.groupby('minute').agg('sum'))
+print(tweets.groupby('minute').agg('sum').to_csv())
 
 #print(tweets.to_csv())
 
