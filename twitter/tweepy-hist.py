@@ -20,13 +20,16 @@ auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = API(auth)
 
-since_date = "2019-01-23"
-until_date = "2019-01-24"
+since_date = "2019-01-24"
+until_date = "2019-01-25"
 query = "government shutdown"
 
 # write to csv
 csvFile = open('data/' + since_date + ':' + until_date + '.csv', 'a')
 csvWriter = csv.writer(csvFile)
+
+
+csvWriter.writerow(["time", "text", "full_name", "country", "platform"])
 
 for data in Cursor(api.search,
                            q=query,
@@ -37,14 +40,19 @@ for data in Cursor(api.search,
     print(tweet["created_at"], tweet["source"])
 
     platform = ""
-    if tweet["source"].find("iPhone") != -1:
+    if tweet["source"].find("iphone") != -1:
         platform = "I"
-    if tweet["source"].find("Android") != -1:
+    if tweet["source"].find("android") != -1:
         platform = "A"
-    if tweet["source"].find("Mac") != -1:
+    if tweet["source"].find("ipad") != -1:
+        platform = "P"
+    if tweet["source"].find("web") != -1:
+        platform = "W"
+    if tweet["source"].find("mac") != -1:
         platform = "M"
     if tweet["source"].find("PC") != -1:
-        platform = "P"
+        platform = "C"
+ 
 
     full_name = ""
     country = ""
