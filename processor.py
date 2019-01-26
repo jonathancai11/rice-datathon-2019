@@ -14,10 +14,17 @@ def calculate_emotion_score(text, emotion):
     return sum(emotion_dict[emotion].isin(words))
     
 
-tweets = pd.read_csv('sample.csv')
+tweets = pd.read_csv('twitter/data/2019-01-23:2019-01-24.csv')
+
+tweets.columns = ['date','text','cityst','country','platform']
 
 for emotion in emotions:
     tweets[emotion] = tweets['text'].apply(lambda text: calculate_emotion_score(text, emotion))
 
-print(tweets)
+tweets['date'] = pd.to_datetime(tweets['date'])
+tweets['minute'] = tweets['date'].apply(lambda date: date.minute)
+
+print(tweets.groupby('minute').agg('sum'))
+
+#print(tweets.to_csv())
 
