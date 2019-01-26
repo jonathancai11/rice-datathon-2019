@@ -20,15 +20,36 @@ auth = OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = API(auth)
 
+since_date = "2019-01-23"
+until_date = "2019-01-24"
+query = "government shutdown"
+
 # write to csv
-csvFile = open('data/tweets.csv', 'a')
+csvFile = open('data/' + since_date + ':' + until_date + '.csv', 'a')
 csvWriter = csv.writer(csvFile)
 
 for data in Cursor(api.search,
-                           q="test",
-                           since="2019-01-23",
-                           until="2019-01-24",
+                           q=query,
+                           since=since_date,
+                           until=until_date,
                            lang="en").items():
     tweet = data._json
-    print(tweet["created_at"], tweet["text"])
-    csvWriter.writerow([tweet["created_at"], tweet["text"].encode('utf-8')])
+    print(tweet["created_at"], tweet["source"])
+
+    platform = ""
+    if tweet["source"].find("iPhone") != -1:
+        platform = "I"
+    if tweet["source"].find("Android") != -1:
+        platform = "A"
+    if tweet["source"].find("Mac") != -1:
+        platform = "M"
+    if tweet["source"].find("PC") != -1:
+        platform = "P"
+
+    full_name = ""
+    country = ""
+    if tweet["place"]:
+        full_name = tweet["place"]["full_name"]
+        country = tweet["place"]["country"]
+
+    csvWriter.writerow([tweet["created_at"], tweet["text"].encode('utf-8'), full_name, country, platform])
